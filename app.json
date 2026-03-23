@@ -1,0 +1,52 @@
+{
+  "pages": [
+    "miniprogram/pages/dashboard/index",
+    "miniprogram/pages/inventory/index",
+    "miniprogram/pages/equipment/index",
+    "miniprogram/pages/lab/index",
+    "miniprogram/pages/ai-assistant/index"
+  ],
+  "networkTimeout": {
+    "request": 60000,      
+    "downloadFile": 60000, 
+    "uploadFile": 60000    
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#16302B",
+    "navigationBarTitleText": "\u5b9e\u9a8c\u5ba4\u51fa\u5165\u5e93\u7cfb\u7edf",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F7F3E8"
+  },
+  "tabBar": {
+    "color": "#52615c",
+    "selectedColor": "#C65D2E",
+    "backgroundColor": "#F7F3E8",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "miniprogram/pages/dashboard/index",
+        "text": "\u603b\u89c8"
+      },
+      {
+        "pagePath": "miniprogram/pages/inventory/index",
+        "text": "\u51fa\u5165\u5e93"
+      },
+      {
+        "pagePath": "miniprogram/pages/equipment/index",
+        "text": "\u8bbe\u5907"
+      },
+      {
+        "pagePath": "miniprogram/pages/lab/index",
+        "text": "\u4eea\u5668\u8bd5\u5242"
+      },
+      {
+        "pagePath": "miniprogram/pages/ai-assistant/index",
+        "text": "AI\u52a9\u624b"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

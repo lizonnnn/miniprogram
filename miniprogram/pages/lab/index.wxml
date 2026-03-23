@@ -1,0 +1,139 @@
+<view class="page-shell">
+  <view class="hero-panel">
+    <view class="hero-kicker">LAB USAGE LOG</view>
+    <view class="hero-title">仪器与试剂使用台账</view>
+    <view class="hero-desc">分开记录仪器使用和试剂使用，试剂自动继承危险品属性，便于按危化类别追踪领用情况。</view>
+  </view>
+
+  <view class="section">
+    <view class="split-tabs">
+      <view class="split-tab {{activeTab === 'instrument' ? 'split-tab-active' : ''}}" data-tab="instrument" bindtap="switchTab">仪器使用</view>
+      <view class="split-tab {{activeTab === 'reagent' ? 'split-tab-active' : ''}}" data-tab="reagent" bindtap="switchTab">试剂使用</view>
+    </view>
+  </view>
+
+  <view wx:if="{{activeTab === 'instrument'}}">
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">新增仪器记录</text>
+        <text class="section-note">记录设备与实验项目</text>
+      </view>
+      <view class="card form-card">
+        <view class="form-grid">
+          <view>
+            <view class="field-label">仪器名称</view>
+            <picker range="{{instrumentCatalog}}" range-key="name" value="{{instrumentForm.instrumentIndex}}" data-form="instrumentForm" data-field="instrumentIndex" bindchange="onPickerChange">
+              <view class="field-control">{{instrumentCatalog.length ? instrumentCatalog[instrumentForm.instrumentIndex].name : '暂无仪器'}}</view>
+            </picker>
+          </view>
+          <view>
+            <view class="field-label">使用人</view>
+            <input class="field-control" placeholder="填写使用人" value="{{instrumentForm.user}}" data-form="instrumentForm" data-field="user" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">所属项目</view>
+            <input class="field-control" placeholder="例如：农残分析" value="{{instrumentForm.project}}" data-form="instrumentForm" data-field="project" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">使用日期</view>
+            <input class="field-control" placeholder="2026-03-10" value="{{instrumentForm.date}}" data-form="instrumentForm" data-field="date" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">时长</view>
+            <input class="field-control" placeholder="例如：2 小时" value="{{instrumentForm.duration}}" data-form="instrumentForm" data-field="duration" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">备注</view>
+            <textarea class="field-control textarea-control" placeholder="可填写校准、维护或异常信息" value="{{instrumentForm.remark}}" data-form="instrumentForm" data-field="remark" bindinput="onInput"></textarea>
+          </view>
+          <button class="submit-btn" bindtap="submitInstrument">保存仪器记录</button>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">仪器历史记录</text>
+        <text class="section-note">{{instrumentRecords.length}} 条</text>
+      </view>
+      <view class="record-list" wx:if="{{instrumentRecords.length}}">
+        <view class="card" wx:for="{{instrumentRecords}}" wx:key="id">
+          <view class="record-title">{{item.instrumentName}}</view>
+          <view class="badge-row">
+            <text class="badge badge-primary">{{item.user}}</text>
+            <text class="badge badge-primary">{{item.duration}}</text>
+          </view>
+          <view class="record-meta">项目：{{item.project}}</view>
+          <view class="record-meta">日期：{{item.date}}</view>
+          <view class="record-meta">备注：{{item.remark || '无'}}</view>
+        </view>
+      </view>
+      <view class="card empty-state" wx:else>暂无仪器使用记录</view>
+    </view>
+  </view>
+
+  <view wx:elif="{{activeTab === 'reagent'}}">
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">新增试剂记录</text>
+        <text class="section-note">自动识别危险品类型</text>
+      </view>
+      <view class="card form-card">
+        <view class="form-grid">
+          <view>
+            <view class="field-label">试剂名称</view>
+            <picker range="{{reagentCatalog}}" range-key="name" value="{{reagentForm.reagentIndex}}" data-form="reagentForm" data-field="reagentIndex" bindchange="onPickerChange">
+              <view class="field-control">{{reagentCatalog.length ? reagentCatalog[reagentForm.reagentIndex].name : '暂无试剂'}}</view>
+            </picker>
+          </view>
+          <view wx:if="{{reagentCatalog.length}}">
+            <view class="field-label">危险品属性</view>
+            <view class="field-control">{{reagentCatalog[reagentForm.reagentIndex].isHazardous ? '是 / ' + reagentCatalog[reagentForm.reagentIndex].hazardType : '否'}}</view>
+          </view>
+          <view>
+            <view class="field-label">用量</view>
+            <input class="field-control" type="digit" placeholder="请输入用量" value="{{reagentForm.amount}}" data-form="reagentForm" data-field="amount" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">使用人</view>
+            <input class="field-control" placeholder="填写使用人" value="{{reagentForm.user}}" data-form="reagentForm" data-field="user" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">使用日期</view>
+            <input class="field-control" placeholder="2026-03-10" value="{{reagentForm.date}}" data-form="reagentForm" data-field="date" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">用途</view>
+            <input class="field-control" placeholder="例如：对照样检测" value="{{reagentForm.purpose}}" data-form="reagentForm" data-field="purpose" bindinput="onInput" />
+          </view>
+          <view>
+            <view class="field-label">备注</view>
+            <textarea class="field-control textarea-control" placeholder="可填写防护措施、联签情况等" value="{{reagentForm.remark}}" data-form="reagentForm" data-field="remark" bindinput="onInput"></textarea>
+          </view>
+          <button class="submit-btn" bindtap="submitReagent">保存试剂记录</button>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">试剂历史记录</text>
+        <text class="section-note">{{reagentRecords.length}} 条</text>
+      </view>
+      <view class="record-list" wx:if="{{reagentRecords.length}}">
+        <view class="card" wx:for="{{reagentRecords}}" wx:key="id">
+          <view class="record-title">{{item.reagentName}}</view>
+          <view class="badge-row">
+            <text class="badge badge-primary">{{item.user}}</text>
+            <text class="badge badge-primary">{{item.amount}}{{item.unit}}</text>
+            <text class="badge {{item.isHazardous ? 'badge-danger' : 'badge-primary'}}">{{item.isHazardous ? item.hazardType : '非危险品'}}</text>
+          </view>
+          <view class="record-meta">日期：{{item.date}}</view>
+          <view class="record-meta">用途：{{item.purpose}}</view>
+          <view class="record-meta">备注：{{item.remark || '无'}}</view>
+        </view>
+      </view>
+      <view class="card empty-state" wx:else>暂无试剂使用记录</view>
+    </view>
+  </view>
+</view>

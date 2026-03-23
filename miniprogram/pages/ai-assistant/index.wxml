@@ -1,0 +1,220 @@
+﻿<view class="page-shell ai-page">
+  <view class="hero-panel ai-hero">
+    <view class="hero-kicker">AI INVENTORY COPILOT</view>
+    <view class="hero-title">AI 搴撳瓨鍔╂墜</view>
+    <view class="hero-desc">鏌ヨ銆佸嚭鍏ュ簱銆佺洏鐐归兘浜ょ粰澶ц瑷€妯″瀷鐞嗚В銆傞渶瑕佷綘鎿嶄綔鏃讹紝鍗＄墖浼氱洿鎺ュ嚭鐜板湪瀵硅瘽娴侀噷銆?/view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">瀵硅瘽娴?/text>
+      <text class="section-note">闀挎寜鏂囧瓧鍙鍒?/text>
+    </view>
+    <view class="record-list">
+      <block wx:for="{{messages}}" wx:key="id" wx:for-item="message">
+        <view
+          wx:if="{{message.kind === 'text'}}"
+          class="message-row {{message.role === 'user' ? 'message-row-user' : 'message-row-assistant'}}"
+        >
+          <view
+            class="message-card {{message.role === 'user' ? 'message-card-user' : 'message-card-assistant'}}"
+            data-text="{{message.text}}"
+            bindlongpress="copyMessage"
+          >
+            <view class="message-role">{{message.role === 'user' ? '浣? : 'AI'}}</view>
+            <view class="message-text">{{message.text}}</view>
+          </view>
+        </view>
+
+        <view wx:if="{{message.kind === 'result_card'}}" class="message-row message-row-assistant">
+          <view class="card message-inline-card query-card">
+            <view class="query-card-head">
+              <view class="record-title">{{message.card.title}}</view>
+              <button class="query-search-btn" bindtap="openInventorySearch">鎼滅储</button>
+            </view>
+            <view class="record-meta" wx:if="{{message.card.summary}}">{{message.card.summary}}</view>
+            <view class="query-item-list">
+              <view class="query-item" wx:for="{{message.card.items}}" wx:key="itemId">
+                <view class="query-item-title">{{item.name}}</view>
+                <view class="badge-row">
+                  <text class="badge badge-primary">搴撳瓨 {{item.stock}}{{item.unit}}</text>
+                  <text class="badge badge-warning" wx:if="{{item.beforeStock !== null && item.beforeStock !== undefined}}">鎿嶄綔鍓?{{item.beforeStock}}{{item.unit}}</text>
+                  <text class="badge badge-warning" wx:if="{{item.beforeMinStock !== null && item.beforeMinStock !== undefined}}">原预警 {{item.beforeMinStock}}{{item.unit}}</text>
+                  <text class="badge badge-primary" wx:if="{{item.minStock !== null && item.minStock !== undefined}}">预警 {{item.minStock}}{{item.unit}}</text>
+                  <text class="badge badge-primary" wx:if="{{item.spec}}">{{item.spec}}</text>
+                </view>
+                <view class="record-meta" wx:if="{{item.location}}">位置 {{item.location}}</view>
+              </view>
+              <view class="record-meta" wx:if="{{!message.card.items || !message.card.items.length}}">鏆傛棤鍙睍绀虹殑搴撳瓨鏄庣粏</view>
+            </view>
+          </view>
+        </view>
+
+        <view wx:if="{{message.kind === 'pending_action'}}" class="message-row message-row-assistant">
+          <view class="card message-inline-card action-card">
+            <view class="confirm-kicker">ACTION CARD</view>
+            <view class="record-title">{{message.title}}</view>
+            <view class="record-meta" wx:if="{{message.summary}}">{{message.summary}}</view>
+
+            <view class="stocktake-list" wx:if="{{message.actionType === 'movement_confirm'}}">
+              <view class="stocktake-item" wx:for="{{message.items}}" wx:key="itemId">
+                <view class="stocktake-title">{{item.itemName}}</view>
+                <view class="badge-row">
+                  <text class="badge {{item.type === '鍑哄簱' ? 'badge-warning' : 'badge-primary'}}">{{item.type || '寰呯‘璁?}}</text>
+                  <text class="badge badge-primary">{{item.quantity}}{{item.unit}}</text>
+                  <text class="badge badge-primary">搴撳瓨 {{item.currentQuantity}}{{item.unit}}</text>
+                </view>
+                <view class="record-meta" wx:if="{{item.remark}}">{{item.remark}}</view>
+              </view>
+            </view>
+
+            <view class="stocktake-list" wx:if="{{message.actionType === 'stocktake_confirm'}}">
+              <view class="stocktake-item" wx:for="{{message.items}}" wx:key="itemId">
+                <view class="stocktake-title">{{item.itemName}}</view>
+                <view class="badge-row">
+                  <text class="badge badge-primary">绯荤粺 {{item.currentQuantity}}{{item.unit}}</text>
+                  <text class="badge badge-warning">瀹炵洏 {{item.countedQuantity}}{{item.unit}}</text>
+                  <text class="badge {{item.difference >= 0 ? 'badge-primary' : 'badge-danger'}}">宸紓 {{item.difference >= 0 ? '+' : ''}}{{item.difference}}{{item.unit}}</text>
+                </view>
+                <view class="record-meta" wx:if="{{item.remark}}">{{item.remark}}</view>
+              </view>
+            </view>
+
+            <view class="stocktake-list" wx:if="{{message.actionType === 'threshold_confirm'}}">
+              <view class="stocktake-item" wx:for="{{message.items}}" wx:key="itemId">
+                <view class="stocktake-title">{{item.itemName}}</view>
+                <view class="badge-row">
+                  <text class="badge badge-warning">当前预警 {{item.currentMinStock}}{{item.unit}}</text>
+                  <text class="badge badge-primary">调整为 {{item.minStock}}{{item.unit}}</text>
+                </view>
+                <view class="record-meta" wx:if="{{item.remark}}">{{item.remark}}</view>
+              </view>
+            </view>
+
+            <view wx:if="{{pendingAction && pendingAction.messageId === message.id}}">
+              <view class="field-label" wx:if="{{message.requiresOperator}}">鎿嶄綔浜?/view>
+              <input
+                wx:if="{{message.requiresOperator}}"
+                class="field-control"
+                placeholder="璇疯緭鍏ユ湰娆＄‘璁や汉"
+                value="{{operatorName}}"
+                bindinput="onOperatorInput"
+              />
+              <button class="submit-btn confirm-btn" loading="{{confirming}}" bindtap="confirmAction">{{message.buttonText || '纭鎵ц'}}</button>
+            </view>
+
+            <view wx:if="{{message.completed}}" class="completion-note">{{message.completionNote}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{hasDraftLines}}">
+    <view class="section-head">
+      <text class="section-title">寰呮墽琛屽唴瀹?/text>
+      <text class="section-note">{{draftLines.length}} 鏉?/text>
+    </view>
+    <view class="draft-board">
+      <view
+        wx:for="{{draftLines}}"
+        wx:key="draftId"
+        wx:for-item="line"
+        wx:for-index="lineIndex"
+        class="card draft-card {{line.status !== 'confirmed' ? 'draft-card-pending' : ''}}"
+      >
+        <view class="draft-line">{{line.text}}</view>
+        <view class="badge-row">
+          <text class="badge {{line.type === '鍑哄簱' ? 'badge-warning' : 'badge-primary'}}">{{line.type || '寰呰ˉ鍏?}}</text>
+          <text class="badge badge-primary">{{line.itemName || '寰呯‘璁ょ墿鍝?}}</text>
+          <text class="badge badge-primary">{{line.quantity}}{{line.unit}}</text>
+        </view>
+        <view class="draft-note" wx:if="{{line.selectionHint}}">{{line.selectionHint}}</view>
+
+        <view class="candidate-list" wx:if="{{line.status === 'needs_selection'}}">
+          <view class="candidate-title">璇烽€夋嫨鍑嗙‘鐗╁搧</view>
+          <view
+            wx:for="{{line.candidates}}"
+            wx:key="itemId"
+            wx:for-item="option"
+            wx:for-index="optionIndex"
+            class="candidate-card"
+            data-line-index="{{lineIndex}}"
+            data-option-index="{{optionIndex}}"
+            bindtap="selectCandidate"
+          >
+            <view class="candidate-name">{{option.name}}</view>
+            <view class="candidate-meta">{{option.category}} 路 {{option.spec || '鏃犺鏍?}} 路 {{option.unit || '鏃犲崟浣?}}</view>
+            <view class="candidate-meta">浣嶇疆锛歿{option.location || '鏈厤缃?}}</view>
+            <view class="candidate-reason" wx:if="{{option.reason}}">{{option.reason}}</view>
+          </view>
+        </view>
+
+        <view class="create-card" wx:if="{{line.status === 'needs_create'}}">
+          <view class="candidate-title">鐩綍涓病鏈夊搴旂墿璧勶紝鍙互鐩存帴鏂板缓</view>
+          <view class="create-grid">
+            <view>
+              <view class="field-label">鐗╄祫鍚嶇О</view>
+              <input class="field-control compact-control" value="{{line.createForm.name}}" data-line-index="{{lineIndex}}" data-field="name" bindinput="onCreateFieldInput" />
+            </view>
+            <view>
+              <view class="field-label">鍒嗙被</view>
+              <input class="field-control compact-control" value="{{line.createForm.category}}" data-line-index="{{lineIndex}}" data-field="category" bindinput="onCreateFieldInput" />
+            </view>
+            <view>
+              <view class="field-label">瑙勬牸</view>
+              <input class="field-control compact-control" value="{{line.createForm.spec}}" data-line-index="{{lineIndex}}" data-field="spec" bindinput="onCreateFieldInput" />
+            </view>
+            <view>
+              <view class="field-label">鍗曚綅</view>
+              <input class="field-control compact-control" value="{{line.createForm.unit}}" data-line-index="{{lineIndex}}" data-field="unit" bindinput="onCreateFieldInput" />
+            </view>
+            <view>
+              <view class="field-label">搴撲綅</view>
+              <input class="field-control compact-control" value="{{line.createForm.location}}" data-line-index="{{lineIndex}}" data-field="location" bindinput="onCreateFieldInput" />
+            </view>
+            <view>
+              <view class="field-label">褰撳墠搴撳瓨</view>
+              <input class="field-control compact-control" type="digit" value="{{line.createForm.stock}}" data-line-index="{{lineIndex}}" data-field="stock" bindinput="onCreateFieldInput" />
+            </view>
+            <view>
+              <view class="field-label">瀹夊叏搴撳瓨</view>
+              <input class="field-control compact-control" type="digit" value="{{line.createForm.minStock}}" data-line-index="{{lineIndex}}" data-field="minStock" bindinput="onCreateFieldInput" />
+            </view>
+            <view class="hazard-switch-row">
+              <view class="field-label">鍗遍櫓鍝?/view>
+              <switch checked="{{line.createForm.isHazardous}}" color="#C65D2E" data-line-index="{{lineIndex}}" bindchange="onCreateSwitchChange" />
+            </view>
+            <view wx:if="{{line.createForm.isHazardous}}">
+              <view class="field-label">椋庨櫓绫诲瀷</view>
+              <input class="field-control compact-control" value="{{line.createForm.hazardType}}" data-line-index="{{lineIndex}}" data-field="hazardType" bindinput="onCreateFieldInput" />
+            </view>
+          </view>
+          <button class="submit-btn create-btn" data-line-index="{{lineIndex}}" bindtap="createItemFromDraft">鏂板缓鐗╄祫骞剁户缁?/button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{pendingCount > 0}}">
+    <view class="card hint-card">
+      <view class="record-title">杩樻湁 {{pendingCount}} 鏉″緟澶勭悊鍐呭</view>
+      <view class="record-meta">浣犲彲浠ョ户缁ˉ鍏呬竴鍙ヨ瘽锛屼篃鍙互鐩存帴鍦ㄥ崱鐗囦笂閫夋嫨鐗╄祫鎴栨柊寤虹墿璧勩€?/view>
+    </view>
+  </view>
+
+  <view class="section composer-section">
+    <view class="card composer-card">
+      <view class="composer-row">
+        <textarea
+          class="field-control composer-input composer-input-inline"
+          value="{{inputText}}"
+          auto-height="true"
+          maxlength="500"
+          bindinput="onInputChange"
+        ></textarea>
+        <button class="composer-send-btn" loading="{{sending}}" bindtap="submitMessage">鍙戦€?/button>
+      </view>
+    </view>
+  </view>
+</view>

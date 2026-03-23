@@ -1,0 +1,68 @@
+<view class="page-shell">
+  <view class="hero-panel">
+    <view class="hero-kicker">EQUIPMENT LOG</view>
+    <view class="hero-title">大型设备使用记录</view>
+    <view class="hero-desc">记录大型设备的使用人、用途、时间区间和状态，便于追踪设备占用与维护节奏。</view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">新增使用记录</text>
+      <text class="section-note">适用于大型设备</text>
+    </view>
+    <view class="card form-card">
+      <view class="form-grid">
+        <view>
+          <view class="field-label">设备名称</view>
+          <input class="field-control" placeholder="例如：大型离心机" value="{{form.deviceName}}" data-field="deviceName" bindinput="onInput" />
+        </view>
+        <view>
+          <view class="field-label">使用人</view>
+          <input class="field-control" placeholder="填写姓名" value="{{form.user}}" data-field="user" bindinput="onInput" />
+        </view>
+        <view>
+          <view class="field-label">使用用途</view>
+          <input class="field-control" placeholder="例如：批量样本分离" value="{{form.purpose}}" data-field="purpose" bindinput="onInput" />
+        </view>
+        <view>
+          <view class="field-label">开始时间</view>
+          <input class="field-control" placeholder="2026-03-10 09:00" value="{{form.startTime}}" data-field="startTime" bindinput="onInput" />
+        </view>
+        <view>
+          <view class="field-label">结束时间</view>
+          <input class="field-control" placeholder="2026-03-10 12:00" value="{{form.endTime}}" data-field="endTime" bindinput="onInput" />
+        </view>
+        <view>
+          <view class="field-label">当前状态</view>
+          <picker range="{{statusOptions}}" value="{{form.statusIndex}}" bindchange="onStatusChange">
+            <view class="field-control">{{statusOptions[form.statusIndex]}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">备注</view>
+          <textarea class="field-control textarea-control" placeholder="可填写交接情况、维护提醒等" value="{{form.remark}}" data-field="remark" bindinput="onInput"></textarea>
+        </view>
+        <button class="submit-btn" bindtap="submitForm">保存设备记录</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">历史记录</text>
+      <text class="section-note">{{records.length}} 条</text>
+    </view>
+    <view class="record-list">
+      <view class="card" wx:for="{{records}}" wx:key="id">
+        <view class="record-title">{{item.deviceName}}</view>
+        <view class="badge-row">
+          <text class="badge {{item.status === '使用中' ? 'badge-danger' : 'badge-primary'}}">{{item.status}}</text>
+          <text class="badge badge-primary">{{item.user}}</text>
+        </view>
+        <view class="record-meta">用途：{{item.purpose}}</view>
+        <view class="record-meta">时间：{{item.startTime}} - {{item.endTime}}</view>
+        <view class="record-meta">备注：{{item.remark || '无'}}</view>
+      </view>
+    </view>
+  </view>
+</view>
