@@ -1,8 +1,7 @@
 <view class="page-shell ai-page">
   <view class="hero-panel ai-hero">
-    <view class="hero-kicker">AI INVENTORY COPILOT</view>
     <view class="hero-title">AI 库存助手</view>
-    <view class="hero-desc">查询、出入库、盘点和预警调整都可以直接交给我；当需要你确认时，我会把操作卡片直接展示在对话里。</view>
+    <view class="hero-desc">查询、出入库、盘点和预警调整都可以直接通过对话完成。</view>
   </view>
 
   <view class="section">
@@ -92,14 +91,9 @@
             </view>
 
             <view wx:if="{{pendingAction && pendingAction.messageId === message.id}}">
-              <view class="field-label" wx:if="{{message.requiresOperator}}">操作人</view>
-              <input
-                wx:if="{{message.requiresOperator}}"
-                class="field-control"
-                placeholder="请输入本次确认人"
-                value="{{operatorName}}"
-                bindinput="onOperatorInput"
-              />
+              <view class="record-meta" wx:if="{{message.requiresOperator}}">
+                {{currentOperator ? ('将以 ' + currentOperator.nickName + ' / ' + currentOperator.operatorUuid + ' 记录本次操作') : '点击确认时将自动获取微信用户名和 UUID'}}
+              </view>
               <button class="submit-btn confirm-btn" loading="{{confirming}}" bindtap="confirmAction">{{message.buttonText || '确认执行'}}</button>
             </view>
 

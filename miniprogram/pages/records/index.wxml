@@ -1,0 +1,43 @@
+<view class="page-shell">
+  <view class="hero-panel">
+    <view class="hero-title">出入库与使用记录</view>
+    <view class="hero-desc">集中搜索出入库、设备使用、仪器使用和试剂使用记录。</view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">搜索记录</text>
+      <text class="section-note">{{visibleRecords.length}} 条结果</text>
+    </view>
+    <view class="card form-card">
+      <input class="field-control" placeholder="搜索名称、操作人、用途、项目、备注" value="{{keyword}}" bindinput="onKeywordInput" />
+      <view class="toolbar records-toolbar">
+        <view
+          wx:for="{{filters}}"
+          wx:key="*this"
+          class="chip {{activeFilter === item ? 'chip-active' : ''}}"
+          data-value="{{item}}"
+          bindtap="switchFilter"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="record-list" wx:if="{{visibleRecords.length}}">
+      <view class="card" wx:for="{{visibleRecords}}" wx:key="id">
+        <view class="record-title">{{item.title}}</view>
+        <view class="badge-row">
+          <text class="badge badge-primary">{{item.recordType}}</text>
+          <text class="badge {{item.badgeTone}}">{{item.badgeText}}</text>
+        </view>
+        <view class="record-meta">{{item.detailPrimary}}</view>
+        <view class="record-meta">{{item.detailSecondary}}</view>
+        <view class="record-meta">时间：{{item.timeText || '未记录'}}</view>
+      </view>
+    </view>
+    <view class="card empty-state" wx:else>没有找到匹配记录</view>
+  </view>
+</view>

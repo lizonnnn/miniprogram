@@ -1,3 +1,10 @@
 .section:first-of-type {
   margin-top: 24rpx;
 }
+
+.quick-card {
+  min-height: 180rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

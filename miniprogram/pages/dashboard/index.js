@@ -21,5 +21,23 @@ Page({
         icon: 'none'
       });
     }
+  },
+
+  openInventory() {
+    wx.switchTab({
+      url: '/miniprogram/pages/inventory/index'
+    });
+  },
+
+  openOperations() {
+    wx.switchTab({
+      url: '/miniprogram/pages/operations/index'
+    });
+  },
+
+  openRecords() {
+    wx.switchTab({
+      url: '/miniprogram/pages/records/index'
+    });
   }
 });

@@ -1,7 +1,9 @@
 page {
   background:
-    linear-gradient(180deg, #d6e3d8 0%, #eef2eb 26%, #f7f3e8 100%);
-  color: #16302b;
+    radial-gradient(circle at top left, rgba(181, 211, 255, 0.28), transparent 26%),
+    radial-gradient(circle at top right, rgba(220, 235, 255, 0.46), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  color: #18344f;
   font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 28rpx;
   box-sizing: border-box;
@@ -22,30 +24,34 @@ textarea {
 }
 
 .hero-panel {
-  background: linear-gradient(135deg, #16302b 0%, #2f5d50 58%, #4d7869 100%);
-  border-radius: 32rpx;
-  color: #f7f3e8;
-  padding: 32rpx 28rpx;
-  box-shadow: 0 18rpx 40rpx rgba(22, 48, 43, 0.18);
+  background: rgba(244, 248, 255, 0.7);
+  border: 2rpx solid rgba(132, 169, 216, 0.24);
+  border-radius: 36rpx;
+  color: #18344f;
+  padding: 24rpx 24rpx 22rpx;
+  box-shadow: 0 18rpx 42rpx rgba(75, 116, 163, 0.12);
+  backdrop-filter: blur(22rpx);
+  -webkit-backdrop-filter: blur(22rpx);
 }
 
 .hero-kicker {
-  font-size: 22rpx;
-  letter-spacing: 4rpx;
-  opacity: 0.8;
+  display: none;
 }
 
 .hero-title {
-  margin-top: 14rpx;
-  font-size: 44rpx;
+  margin-top: 0;
+  font-size: 36rpx;
   font-weight: 700;
+  color: #17324b;
+  line-height: 1.35;
 }
 
 .hero-desc {
-  margin-top: 16rpx;
-  font-size: 24rpx;
-  line-height: 1.7;
-  opacity: 0.88;
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  line-height: 1.5;
+  color: #7893b0;
+  opacity: 1;
 }
 
 .section {
@@ -62,19 +68,22 @@ textarea {
 .section-title {
   font-size: 32rpx;
   font-weight: 700;
+  color: #17324b;
 }
 
 .section-note {
   font-size: 22rpx;
-  color: #61746c;
+  color: #7f9aba;
 }
 
 .card {
-  background: rgba(247, 243, 232, 0.92);
-  border: 2rpx solid rgba(47, 93, 80, 0.12);
-  border-radius: 28rpx;
+  background: rgba(248, 251, 255, 0.74);
+  border: 2rpx solid rgba(132, 169, 216, 0.22);
+  border-radius: 30rpx;
   padding: 24rpx;
-  box-shadow: 0 12rpx 24rpx rgba(70, 79, 74, 0.08);
+  box-shadow: 0 14rpx 34rpx rgba(93, 132, 177, 0.1);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
 }
 
 .grid-two {
@@ -92,18 +101,18 @@ textarea {
 
 .metric-label {
   font-size: 24rpx;
-  color: #5c6e67;
+  color: #6f8cad;
 }
 
 .metric-value {
   font-size: 56rpx;
   font-weight: 700;
-  color: #16302b;
+  color: #1d4670;
 }
 
 .metric-foot {
   font-size: 22rpx;
-  color: #8a5a41;
+  color: #84a1c1;
 }
 
 .toolbar {
@@ -115,14 +124,19 @@ textarea {
 .chip {
   padding: 14rpx 24rpx;
   border-radius: 999rpx;
-  background: rgba(47, 93, 80, 0.09);
-  color: #2f5d50;
+  background: rgba(176, 207, 247, 0.18);
+  border: 2rpx solid rgba(132, 169, 216, 0.18);
+  color: #4a77a7;
   font-size: 24rpx;
+  backdrop-filter: blur(16rpx);
+  -webkit-backdrop-filter: blur(16rpx);
 }
 
 .chip-active {
-  background: #c65d2e;
-  color: #fff7ef;
+  background: rgba(112, 164, 230, 0.24);
+  border-color: rgba(66, 124, 193, 0.28);
+  color: #285d95;
+  box-shadow: 0 10rpx 24rpx rgba(111, 157, 214, 0.14);
 }
 
 .record-list {
@@ -134,13 +148,13 @@ textarea {
 .record-title {
   font-size: 30rpx;
   font-weight: 700;
-  color: #17312c;
+  color: #193753;
 }
 
 .record-meta {
   margin-top: 10rpx;
   font-size: 24rpx;
-  color: #60726b;
+  color: #708dad;
   line-height: 1.7;
 }
 
@@ -155,25 +169,29 @@ textarea {
   padding: 8rpx 16rpx;
   border-radius: 999rpx;
   font-size: 22rpx;
+  border: 2rpx solid transparent;
 }
 
 .badge-primary {
-  background: rgba(47, 93, 80, 0.12);
-  color: #2f5d50;
+  background: rgba(188, 217, 252, 0.22);
+  border-color: rgba(132, 169, 216, 0.18);
+  color: #34679c;
 }
 
 .badge-warning {
-  background: rgba(198, 93, 46, 0.14);
-  color: #b94f20;
+  background: rgba(159, 198, 243, 0.22);
+  border-color: rgba(99, 146, 208, 0.18);
+  color: #2a5f98;
 }
 
 .badge-danger {
-  background: rgba(173, 63, 27, 0.14);
-  color: #9d3212;
+  background: rgba(214, 231, 255, 0.34);
+  border-color: rgba(120, 157, 205, 0.22);
+  color: #234f7f;
 }
 
 .form-card {
-  background: rgba(255, 249, 241, 0.92);
+  background: rgba(250, 252, 255, 0.82);
 }
 
 .form-grid {
@@ -185,7 +203,7 @@ textarea {
 .field-label {
   margin-bottom: 8rpx;
   font-size: 24rpx;
-  color: #586861;
+  color: #6683a5;
 }
 
 .field-control {
@@ -193,9 +211,10 @@ textarea {
   min-height: 84rpx;
   padding: 20rpx 24rpx;
   border-radius: 22rpx;
-  background: #fffdf8;
-  border: 2rpx solid rgba(47, 93, 80, 0.14);
-  color: #16302b;
+  background: rgba(255, 255, 255, 0.76);
+  border: 2rpx solid rgba(151, 187, 229, 0.22);
+  color: #1b3854;
+  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.72);
 }
 
 .textarea-control {
@@ -205,10 +224,18 @@ textarea {
 .submit-btn {
   margin-top: 12rpx;
   border-radius: 24rpx;
-  background: #16302b;
-  color: #f7f3e8;
+  background: rgba(125, 175, 236, 0.2);
+  border: 2rpx solid rgba(98, 148, 210, 0.24);
+  color: #2c649c;
   font-size: 28rpx;
   font-weight: 600;
+  box-shadow: 0 12rpx 28rpx rgba(97, 145, 205, 0.12);
+  backdrop-filter: blur(18rpx);
+  -webkit-backdrop-filter: blur(18rpx);
+}
+
+.submit-btn::after {
+  border: 0;
 }
 
 .split-tabs {
@@ -221,20 +248,25 @@ textarea {
   text-align: center;
   padding: 18rpx 0;
   border-radius: 22rpx;
-  background: rgba(47, 93, 80, 0.08);
-  color: #2f5d50;
+  background: rgba(185, 215, 251, 0.16);
+  border: 2rpx solid rgba(132, 169, 216, 0.18);
+  color: #4d79a6;
   font-size: 26rpx;
   font-weight: 600;
+  backdrop-filter: blur(16rpx);
+  -webkit-backdrop-filter: blur(16rpx);
 }
 
 .split-tab-active {
-  background: #2f5d50;
-  color: #f7f3e8;
+  background: rgba(117, 171, 236, 0.24);
+  border-color: rgba(77, 127, 190, 0.26);
+  color: #275e96;
+  box-shadow: 0 10rpx 24rpx rgba(111, 157, 214, 0.12);
 }
 
 .empty-state {
   padding: 36rpx 24rpx;
   text-align: center;
   font-size: 24rpx;
-  color: #73837d;
+  color: #7c97b6;
 }

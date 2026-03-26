@@ -1,0 +1,249 @@
+<view class="page-shell">
+  <view class="hero-panel">
+    <view class="hero-title">出入库与使用登记</view>
+    <view class="hero-desc">统一处理借用、使用和出入库，自动记录微信用户与 UUID。</view>
+  </view>
+
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">操作类型</text>
+      <text class="section-note">统一登记入口</text>
+    </view>
+    <view class="split-tabs">
+      <view
+        wx:for="{{sectionTabs}}"
+        wx:key="key"
+        class="split-tab {{activeSection === item.key ? 'split-tab-active' : ''}}"
+        data-section="{{item.key}}"
+        bindtap="switchSection"
+      >
+        {{item.label}}
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="card helper-card">
+      <view class="helper-row">
+        <view>
+          <view class="record-title">当前操作人</view>
+          <view class="record-meta">{{currentOperator ? currentOperator.nickName + ' / ' + currentOperator.operatorUuid : '首次提交时自动获取微信用户名和 UUID'}}</view>
+        </view>
+        <button class="ghost-btn" bindtap="openRecordsPage">查看记录页</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{activeSection === 'stock'}}">
+    <view class="section-head">
+      <text class="section-title">出入库登记</text>
+      <text class="section-note">选择物资后展示库存提示</text>
+    </view>
+    <view class="card form-card">
+      <view class="field-label">选择物资</view>
+      <view class="field-control selector-trigger" data-selector-key="stock" bindtap="openSelector">
+        {{selectedStockCard ? (selectedStockCard.name + ' · ' + (selectedStockCard.spec || '无规格')) : '点击选择物资'}}
+      </view>
+
+      <view class="floating-hint" wx:if="{{selectedStockCard}}">
+        <view class="hint-title">{{selectedStockCard.name}}</view>
+        <view class="hint-meta">当前库存 {{selectedStockCard.stock}}{{selectedStockCard.unit}}</view>
+        <view class="hint-meta">安全库存 {{selectedStockCard.minStock}}{{selectedStockCard.unit}}</view>
+      </view>
+
+      <view class="field-label">操作类型</view>
+      <picker range="{{movementTypes}}" value="{{stockForm.typeIndex}}" data-form="stockForm" data-field="typeIndex" bindchange="onPickerChange">
+        <view class="field-control">{{movementTypes[stockForm.typeIndex]}}</view>
+      </picker>
+
+      <view class="field-label">数量</view>
+      <input class="field-control" type="digit" placeholder="请输入数量" value="{{stockForm.quantity}}" data-form="stockForm" data-field="quantity" bindinput="onNumberInput" />
+
+      <view class="field-label">备注</view>
+      <textarea class="field-control textarea-control" placeholder="填写入库批次、用途或说明" value="{{stockForm.remark}}" data-form="stockForm" data-field="remark" bindinput="onFieldInput"></textarea>
+
+      <button class="submit-btn" bindtap="submitStock">提交出入库</button>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{activeSection === 'equipment'}}">
+    <view class="section-head">
+      <text class="section-title">大型设备使用</text>
+      <text class="section-note">支持开始和结束时间选择</text>
+    </view>
+    <view class="card form-card">
+      <view class="field-label">选择大型设备</view>
+      <view class="field-control selector-trigger" data-selector-key="equipment" bindtap="openSelector">
+        {{selectedEquipmentCard ? (selectedEquipmentCard.name + ' · ' + (selectedEquipmentCard.spec || '无规格')) : '点击选择大型设备'}}
+      </view>
+      <view class="record-meta" wx:if="{{selectedEquipmentCard}}">{{equipmentBusyMap[selectedEquipmentCard.name] ? '该设备当前使用中，无法再次借用' : '当前可登记借用'}}</view>
+
+      <view class="field-label">用途</view>
+      <input class="field-control" placeholder="例如：批量样本分离" value="{{equipmentForm.purpose}}" data-form="equipmentForm" data-field="purpose" bindinput="onFieldInput" />
+
+      <view class="picker-grid">
+        <view>
+          <view class="field-label">开始日期</view>
+          <picker mode="date" value="{{equipmentForm.startDate}}" data-form="equipmentForm" data-field="startDate" bindchange="onDateChange">
+            <view class="field-control compact-picker">{{equipmentForm.startDate}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">开始时间</view>
+          <picker mode="time" value="{{equipmentForm.startTime}}" data-form="equipmentForm" data-field="startTime" bindchange="onTimeChange">
+            <view class="field-control compact-picker">{{equipmentForm.startTime}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">结束日期</view>
+          <picker mode="date" value="{{equipmentForm.endDate}}" data-form="equipmentForm" data-field="endDate" bindchange="onDateChange">
+            <view class="field-control compact-picker">{{equipmentForm.endDate}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">结束时间</view>
+          <picker mode="time" value="{{equipmentForm.endTime}}" data-form="equipmentForm" data-field="endTime" bindchange="onTimeChange">
+            <view class="field-control compact-picker">{{equipmentForm.endTime}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="field-label">状态</view>
+      <picker range="{{statusOptions}}" value="{{equipmentForm.statusIndex}}" data-form="equipmentForm" data-field="statusIndex" bindchange="onPickerChange">
+        <view class="field-control">{{statusOptions[equipmentForm.statusIndex]}}</view>
+      </picker>
+
+      <view class="field-label">备注</view>
+      <textarea class="field-control textarea-control" placeholder="填写交接、维护或提醒信息" value="{{equipmentForm.remark}}" data-form="equipmentForm" data-field="remark" bindinput="onFieldInput"></textarea>
+
+      <button class="submit-btn" bindtap="submitEquipment">保存设备使用记录</button>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{activeSection === 'instrument'}}">
+    <view class="section-head">
+      <text class="section-title">仪器使用</text>
+      <text class="section-note">使用中的仪器会自动禁选</text>
+    </view>
+    <view class="card form-card">
+      <view class="field-label">选择仪器</view>
+      <view class="field-control selector-trigger" data-selector-key="instrument" bindtap="openSelector">
+        {{selectedInstrumentCard ? (selectedInstrumentCard.name + ' · ' + (selectedInstrumentCard.spec || '无规格')) : '点击选择仪器'}}
+      </view>
+      <view class="record-meta" wx:if="{{selectedInstrumentCard}}">{{instrumentBusyMap[selectedInstrumentCard.name] ? '该仪器当前使用中，名字会变灰且不可选' : '当前可登记使用'}}</view>
+
+      <view class="field-label">所属项目</view>
+      <input class="field-control" placeholder="例如：农残分析 / HPLC 检测" value="{{instrumentForm.project}}" data-form="instrumentForm" data-field="project" bindinput="onFieldInput" />
+
+      <view class="picker-grid">
+        <view>
+          <view class="field-label">开始日期</view>
+          <picker mode="date" value="{{instrumentForm.startDate}}" data-form="instrumentForm" data-field="startDate" bindchange="onDateChange">
+            <view class="field-control compact-picker">{{instrumentForm.startDate}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">开始时间</view>
+          <picker mode="time" value="{{instrumentForm.startTime}}" data-form="instrumentForm" data-field="startTime" bindchange="onTimeChange">
+            <view class="field-control compact-picker">{{instrumentForm.startTime}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">结束日期</view>
+          <picker mode="date" value="{{instrumentForm.endDate}}" data-form="instrumentForm" data-field="endDate" bindchange="onDateChange">
+            <view class="field-control compact-picker">{{instrumentForm.endDate}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">结束时间</view>
+          <picker mode="time" value="{{instrumentForm.endTime}}" data-form="instrumentForm" data-field="endTime" bindchange="onTimeChange">
+            <view class="field-control compact-picker">{{instrumentForm.endTime}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="field-label">状态</view>
+      <picker range="{{statusOptions}}" value="{{instrumentForm.statusIndex}}" data-form="instrumentForm" data-field="statusIndex" bindchange="onPickerChange">
+        <view class="field-control">{{statusOptions[instrumentForm.statusIndex]}}</view>
+      </picker>
+
+      <view class="field-label">备注</view>
+      <textarea class="field-control textarea-control" placeholder="填写校准、清洗或异常说明" value="{{instrumentForm.remark}}" data-form="instrumentForm" data-field="remark" bindinput="onFieldInput"></textarea>
+
+      <button class="submit-btn" bindtap="submitInstrument">保存仪器使用记录</button>
+    </view>
+  </view>
+
+  <view class="section" wx:if="{{activeSection === 'reagent'}}">
+    <view class="section-head">
+      <text class="section-title">试剂使用</text>
+      <text class="section-note">登记后会自动出库</text>
+    </view>
+    <view class="card form-card">
+      <view class="field-label">选择试剂</view>
+      <view class="field-control selector-trigger" data-selector-key="reagent" bindtap="openSelector">
+        {{selectedReagentCard ? (selectedReagentCard.name + ' · ' + (selectedReagentCard.spec || '无规格')) : '点击选择试剂'}}
+      </view>
+      <view class="record-meta" wx:if="{{selectedReagentCard}}">当前库存 {{selectedReagentCard.stock}}{{selectedReagentCard.unit}}，提交后会自动记为出库</view>
+
+      <view class="field-label">用量</view>
+      <input class="field-control" type="digit" placeholder="请输入用量" value="{{reagentForm.amount}}" data-form="reagentForm" data-field="amount" bindinput="onNumberInput" />
+
+      <view class="picker-grid">
+        <view>
+          <view class="field-label">使用日期</view>
+          <picker mode="date" value="{{reagentForm.date}}" data-form="reagentForm" data-field="date" bindchange="onDateChange">
+            <view class="field-control compact-picker">{{reagentForm.date}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="field-label">使用时间</view>
+          <picker mode="time" value="{{reagentForm.time}}" data-form="reagentForm" data-field="time" bindchange="onTimeChange">
+            <view class="field-control compact-picker">{{reagentForm.time}}</view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="field-label">用途</view>
+      <input class="field-control" placeholder="例如：样本前处理 / 消杀" value="{{reagentForm.purpose}}" data-form="reagentForm" data-field="purpose" bindinput="onFieldInput" />
+
+      <view class="field-label">备注</view>
+      <textarea class="field-control textarea-control" placeholder="填写防护措施、样品批次或异常说明" value="{{reagentForm.remark}}" data-form="reagentForm" data-field="remark" bindinput="onFieldInput"></textarea>
+
+      <button class="submit-btn" bindtap="submitReagent">保存试剂使用记录</button>
+    </view>
+  </view>
+
+  <view class="selector-mask" wx:if="{{selectorVisible}}" bindtap="closeSelector">
+    <view class="selector-sheet" catchtap="noop">
+      <view class="selector-head">
+        <view class="record-title">{{selectorTitle}}</view>
+        <view class="selector-close" bindtap="closeSelector">关闭</view>
+      </view>
+      <input class="field-control selector-search" placeholder="搜索后选择一项" value="{{selectorKeyword}}" bindinput="onSelectorKeywordInput" />
+      <scroll-view class="selector-list" scroll-y="true">
+        <view
+          wx:for="{{selectorOptions}}"
+          wx:key="id"
+          class="selector-option {{item.disabled ? 'selector-option-disabled' : ''}}"
+          data-item-id="{{item.id}}"
+          data-disabled="{{item.disabled}}"
+          bindtap="selectSelectorOption"
+        >
+          <view class="selector-radio {{item.selected ? 'selector-radio-active' : ''}}"></view>
+          <view class="selector-copy">
+            <view class="option-head">
+              <view class="option-title">{{item.name}}</view>
+              <text class="badge {{item.disabled ? 'badge-danger' : 'badge-primary'}}" wx:if="{{item.statusText}}">{{item.statusText}}</text>
+              <text class="badge {{item.isHazardous ? 'badge-danger' : 'badge-primary'}}" wx:if="{{!item.statusText && item.hazardType}}">{{item.hazardType}}</text>
+            </view>
+            <view class="option-meta">{{item.spec || '无规格'}} · {{item.location || '未配置库位'}}</view>
+            <view class="option-meta" wx:if="{{item.statusDetail}}">{{item.statusDetail}}</view>
+            <view class="option-meta" wx:if="{{!item.statusDetail && item.category}}">{{item.category}} · 库存 {{item.stock}}{{item.unit}}</view>
+          </view>
+        </view>
+        <view class="empty-state" wx:if="{{!selectorOptions.length}}">没有找到匹配项</view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

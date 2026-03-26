@@ -1,8 +1,7 @@
 <view class="page-shell">
   <view class="hero-panel">
-    <view class="hero-kicker">LAB STOCK CONTROL</view>
     <view class="hero-title">实验室出入库指挥台</view>
-    <view class="hero-desc">集中查看库存状态、危险试剂、大型设备占用情况和最新使用动态，适合仓管与实验平台主管快速巡检。</view>
+    <view class="hero-desc">查看总览指标并快速进入库存、登记和记录查询。</view>
   </view>
 
   <view class="section">
@@ -36,38 +35,25 @@
 
   <view class="section" wx:if="{{metrics}}">
     <view class="section-head">
-      <text class="section-title">最新出入库</text>
-      <text class="section-note">近 4 条</text>
+      <text class="section-title">快捷入口</text>
+      <text class="section-note">围绕库存与登记</text>
     </view>
-    <view class="record-list">
-      <view class="card" wx:for="{{metrics.recentMovements}}" wx:key="id">
-        <view class="record-title">{{item.itemName}}</view>
-        <view class="badge-row">
-          <text class="badge {{item.type === '出库' ? 'badge-warning' : 'badge-primary'}}">{{item.type}}</text>
-          <text class="badge badge-primary">{{item.quantity}}{{item.unit}}</text>
-        </view>
-        <view class="record-meta">操作人：{{item.operator}}</view>
-        <view class="record-meta">时间：{{item.date}}</view>
-        <view class="record-meta">备注：{{item.remark || '无'}}</view>
+    <view class="grid-two">
+      <view class="card quick-card" bindtap="openInventory">
+        <text class="record-title">库存总览</text>
+        <text class="record-meta">搜索大型设备、仪器、试剂的库存和利用情况</text>
       </view>
-    </view>
-  </view>
-
-  <view class="section" wx:if="{{metrics}}">
-    <view class="section-head">
-      <text class="section-title">大型设备使用动态</text>
-      <text class="section-note">近 3 条</text>
-    </view>
-    <view class="record-list">
-      <view class="card" wx:for="{{metrics.equipmentUsageRecords}}" wx:key="id">
-        <view class="record-title">{{item.deviceName}}</view>
-        <view class="badge-row">
-          <text class="badge {{item.status === '使用中' ? 'badge-danger' : 'badge-primary'}}">{{item.status}}</text>
-          <text class="badge badge-primary">{{item.user}}</text>
-        </view>
-        <view class="record-meta">用途：{{item.purpose}}</view>
-        <view class="record-meta">时段：{{item.startTime}} - {{item.endTime}}</view>
-        <view class="record-meta">备注：{{item.remark || '无'}}</view>
+      <view class="card quick-card" bindtap="openOperations">
+        <text class="record-title">登记中心</text>
+        <text class="record-meta">统一处理借用、使用、出入库登记</text>
+      </view>
+      <view class="card quick-card" bindtap="openRecords">
+        <text class="record-title">记录查询</text>
+        <text class="record-meta">集中检索出入库和使用台账</text>
+      </view>
+      <view class="card quick-card" bindtap="openOperations">
+        <text class="record-title">快速操作</text>
+        <text class="record-meta">直接进入登记页面完成当前实验室动作</text>
       </view>
     </view>
   </view>

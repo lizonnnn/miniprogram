@@ -1,0 +1,181 @@
+.helper-card {
+  padding: 26rpx 24rpx;
+}
+
+.helper-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.ghost-btn {
+  margin: 0;
+  padding: 0 24rpx;
+  height: 68rpx;
+  line-height: 68rpx;
+  border-radius: 999rpx;
+  background: rgba(188, 217, 252, 0.18);
+  border: 2rpx solid rgba(132, 169, 216, 0.2);
+  color: #34679c;
+  font-size: 24rpx;
+}
+
+.ghost-btn::after {
+  border: 0;
+}
+
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  margin-top: 12rpx;
+  margin-bottom: 18rpx;
+}
+
+.option-card {
+  padding: 22rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.76);
+  border: 2rpx solid rgba(151, 187, 229, 0.18);
+}
+
+.option-card-active {
+  border-color: rgba(84, 136, 199, 0.34);
+  box-shadow: 0 10rpx 24rpx rgba(97, 145, 205, 0.12);
+}
+
+.option-card-disabled {
+  opacity: 0.45;
+}
+
+.option-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.option-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #17324b;
+}
+
+.option-meta {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #6f8cad;
+  line-height: 1.6;
+}
+
+.floating-hint {
+  margin-bottom: 18rpx;
+  padding: 20rpx 22rpx;
+  border-radius: 22rpx;
+  background: rgba(187, 219, 255, 0.2);
+  border: 2rpx solid rgba(132, 169, 216, 0.2);
+}
+
+.hint-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #20486f;
+}
+
+.hint-meta {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: #6c89ab;
+}
+
+.picker-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18rpx;
+}
+
+.compact-picker {
+  min-height: 76rpx;
+  display: flex;
+  align-items: center;
+}
+
+.selector-trigger {
+  display: flex;
+  align-items: center;
+  color: #5f7f9f;
+}
+
+.selector-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(19, 38, 57, 0.24);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 24rpx;
+  z-index: 30;
+}
+
+.selector-sheet {
+  width: 100%;
+  max-height: 78vh;
+  border-radius: 30rpx;
+  background: rgba(248, 251, 255, 0.96);
+  border: 2rpx solid rgba(132, 169, 216, 0.2);
+  padding: 24rpx;
+  box-shadow: 0 -12rpx 32rpx rgba(78, 117, 163, 0.16);
+}
+
+.selector-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.selector-close {
+  font-size: 24rpx;
+  color: #5f7f9f;
+}
+
+.selector-search {
+  margin-top: 18rpx;
+}
+
+.selector-list {
+  margin-top: 16rpx;
+  max-height: 52vh;
+}
+
+.selector-option {
+  display: flex;
+  gap: 18rpx;
+  padding: 18rpx 8rpx;
+  border-bottom: 1rpx solid rgba(132, 169, 216, 0.12);
+}
+
+.selector-option-disabled {
+  opacity: 0.42;
+}
+
+.selector-radio {
+  width: 34rpx;
+  height: 34rpx;
+  border-radius: 50%;
+  border: 2rpx solid rgba(132, 169, 216, 0.46);
+  margin-top: 4rpx;
+  flex-shrink: 0;
+}
+
+.selector-radio-active {
+  background: #4d8fe0;
+  border-color: #4d8fe0;
+  box-shadow: inset 0 0 0 8rpx rgba(255, 255, 255, 0.92);
+}
+
+.selector-copy {
+  flex: 1;
+  min-width: 0;
+}

@@ -1,4 +1,5 @@
-﻿const store = require('../../utils/store');
+const store = require('../../utils/store');
+const operatorProfile = require('../../utils/operator-profile');
 
 const INTRO_TEXT =
   '可以直接告诉我你想入库、出库、查询库存、盘点，或者修改预警值；我会继续追问缺失信息，并在操作清楚时给你确认卡片。';
@@ -385,7 +386,7 @@ Page({
     draftLines: [],
     pendingAction: null,
     inputText: '',
-    operatorName: '',
+    currentOperator: null,
     sending: false,
     confirming: false,
     hasDraftLines: false,
@@ -417,6 +418,7 @@ Page({
     this.catalog = null;
     this.catalogPromise = null;
     this.setData({
+      currentOperator: operatorProfile.getCachedOperatorProfile(),
       messages: [createTextMessage('assistant', INTRO_TEXT)]
     });
     this.refreshCatalog().catch((error) => {
@@ -425,6 +427,9 @@ Page({
   },
 
   onShow() {
+    this.setData({
+      currentOperator: operatorProfile.getCachedOperatorProfile()
+    });
     this.refreshCatalog().catch((error) => {
       console.error('刷新库存目录失败', error);
     });
@@ -433,12 +438,6 @@ Page({
   onInputChange(event) {
     this.setData({
       inputText: event.detail.value
-    });
-  },
-
-  onOperatorInput(event) {
-    this.setData({
-      operatorName: event.detail.value
     });
   },
 
@@ -711,20 +710,17 @@ Page({
       return;
     }
 
-    if (action.requiresOperator && !(this.data.operatorName || '').trim()) {
-      wx.showToast({
-        title: '请先填写操作人',
-        icon: 'none'
-      });
-      return;
-    }
-
     this.setData({
       confirming: true
     });
 
     try {
-      const operatorName = (this.data.operatorName || '').trim();
+      const currentOperator = action.requiresOperator
+        ? await operatorProfile.ensureOperatorProfile()
+        : {
+            nickName: '系统',
+            operatorUuid: ''
+          };
       const confirmedAt = getNow();
       const draftLinesSnapshot = this.data.draftLines.slice();
       const beforeCatalog = (await this.ensureCatalog()).map((item) => Object.assign({}, item));
@@ -741,17 +737,20 @@ Page({
 
       if (action.type === 'movement_confirm') {
         await store.applyDraftMovements(this.data.draftLines, {
-          operator: operatorName,
+          operator: currentOperator.nickName,
+          operatorUuid: currentOperator.operatorUuid,
           date: confirmedAt
         });
       } else if (action.type === 'stocktake_confirm') {
         await store.applyStocktakeAdjustments(action.items, {
-          operator: operatorName,
+          operator: currentOperator.nickName,
+          operatorUuid: currentOperator.operatorUuid,
           date: confirmedAt
         });
       } else if (action.type === 'threshold_confirm') {
         await store.applyThresholdUpdates(action.items, {
-          operator: operatorName,
+          operator: currentOperator.nickName,
+          operatorUuid: currentOperator.operatorUuid,
           date: confirmedAt
         });
       } else {
@@ -764,9 +763,9 @@ Page({
         ? confirmedMessages.concat(createResultCardMessage(operationInventoryCard))
         : confirmedMessages;
       this.setData({
+        currentOperator,
         messages: nextMessages,
         draftLines: [],
-        operatorName: '',
         hasDraftLines: false,
         pendingCount: 0,
         pendingAction: null

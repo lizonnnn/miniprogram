@@ -1,3 +1,62 @@
-.toolbar {
-  margin-bottom: 6rpx;
+.inventory-toolbar {
+  margin: 0;
+}
+
+.search-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14rpx;
+  align-items: stretch;
+}
+
+.search-input {
+  min-width: 0;
+  min-height: 76rpx;
+  padding-right: 18rpx;
+}
+
+.search-btn {
+  min-width: 88rpx;
+  height: 76rpx;
+  padding: 0 16rpx;
+  border-radius: 20rpx;
+  background: rgba(125, 175, 236, 0.2);
+  border: 2rpx solid rgba(98, 148, 210, 0.24);
+  color: #2c649c;
+  font-size: 24rpx;
+  font-weight: 600;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.search-record-link {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #4d79a6;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14rpx 18rpx;
+  margin-top: 16rpx;
+}
+
+.detail-item {
+  min-width: 0;
+}
+
+.detail-label {
+  font-size: 20rpx;
+  color: #7f9aba;
+}
+
+.detail-value {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  line-height: 1.45;
+  color: #23425f;
 }
