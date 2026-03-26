@@ -9,9 +9,17 @@ Page({
     this.refresh();
   },
 
-  refresh() {
-    this.setData({
-      metrics: store.getDashboardMetrics()
-    });
+  async refresh() {
+    try {
+      const metrics = await store.getDashboardMetrics();
+      this.setData({
+        metrics
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error.message || '加载数据失败',
+        icon: 'none'
+      });
+    }
   }
 });

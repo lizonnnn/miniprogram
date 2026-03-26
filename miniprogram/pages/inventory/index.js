@@ -24,13 +24,20 @@ Page({
     this.refresh();
   },
 
-  refresh() {
-    const result = store.getInventory(this.data.activeFilter);
-    this.setData({
-      items: result.items,
-      movements: result.movements,
-      stockOptions: result.stockOptions
-    });
+  async refresh() {
+    try {
+      const result = await store.getInventory(this.data.activeFilter);
+      this.setData({
+        items: result.items,
+        movements: result.movements,
+        stockOptions: result.stockOptions
+      });
+    } catch (error) {
+      wx.showToast({
+        title: error.message || '加载库存失败',
+        icon: 'none'
+      });
+    }
   },
 
   switchFilter(event) {
@@ -52,7 +59,7 @@ Page({
     });
   },
 
-  submitForm() {
+  async submitForm() {
     const selectedItem = this.data.stockOptions[this.data.form.itemIndex];
     if (!selectedItem) {
       wx.showToast({ title: '请先选择物资', icon: 'none' });
@@ -60,7 +67,7 @@ Page({
     }
 
     try {
-      store.addStockMovement({
+      await store.addStockMovement({
         itemId: selectedItem.id,
         type: this.data.movementTypes[this.data.form.typeIndex],
         quantity: this.data.form.quantity,
@@ -79,7 +86,7 @@ Page({
           remark: ''
         }
       });
-      this.refresh();
+      await this.refresh();
     } catch (error) {
       wx.showToast({ title: error.message, icon: 'none' });
     }

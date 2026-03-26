@@ -7,8 +7,8 @@
 
   <view class="section">
     <view class="section-head">
-      <text class="section-title">瀵硅瘽娴?/text>
-      <text class="section-note">闀挎寜鏂囧瓧鍙鍒?/text>
+      <text class="section-title">瀵硅瘽娴?</text>
+      <text class="section-note">闀挎寜鏂囧瓧鍙鍒?</text>
     </view>
     <view class="record-list">
       <block wx:for="{{messages}}" wx:key="id" wx:for-item="message">
